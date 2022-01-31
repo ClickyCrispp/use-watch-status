@@ -18,6 +18,22 @@ To use `use-watch-status`, you must use `react@16.8.0` or greater which includes
 npm install --save use-watch-status
 ```
 
+## API
+```tsx
+const [checks, triggers, clear] = useWatchStatus(STATUS_STATES, INITIAL_STATE)
+```
+
+```
+ @param     events - override default events (MUST BE A CONSTANT, and NOT defined at runtime)
+ @param     initialEvent - initial state
+```
+
+```
+ @returns   EventChecks - Only one of these checks will be true at any given time
+ @returns   EventTriggers - Can be used to turn a single check to true
+ @returns   Clear - Can be used to clear state
+```
+
 ## Usage
 
 ```tsx
@@ -28,7 +44,7 @@ import { useWatchStatus } from 'use-watch-status'
 const ALL_POTENTIAL_STATUS_STATES = ['ready', 'loading', 'complete'] as const;
 
 const Example = () => {
-  const [checks, triggers] = useWatchStatus(ALL_POTENTIAL_STATUS_STATES)
+  const [checks, triggers, clear] = useWatchStatus(ALL_POTENTIAL_STATUS_STATES, 'ready')
   
   useEffect(() => {
     // simulate ready
@@ -66,7 +82,7 @@ const useWatchFetchStatus = () => useWatchStatus(NETWORK_FETCH_STATUS_STATES);
 // - Usage - 
 
 const App = () => {
-  const [fetchStatusChecks, fetchStatusTriggers] = useWatchFetchStatus();
+  const [fetchStatusChecks, fetchStatusTriggers, clear] = useWatchFetchStatus();
 
   useEffect(() => {
     if (isNetworkAccessable) {     // <--- pretend check before triggering 'ready' status
@@ -77,6 +93,14 @@ const App = () => {
   if (fetchStatusChecks.isReady) {
     // Do something
   }
+
+  function resetStatus() {
+    clear();
+  }
+
+  return (
+    ...Some Code
+  )
 }
 
 ```

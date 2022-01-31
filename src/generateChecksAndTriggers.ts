@@ -19,5 +19,5 @@ export function generateChecksAndTriggers(
     eventTriggers[eventTriggerName] = () => dispatch(generateUpdateAction(event));
   }
 
-  return [eventChecks, eventTriggers];
+  return [eventChecks, eventTriggers, () => dispatch(generateUpdateAction(undefined))];
 }

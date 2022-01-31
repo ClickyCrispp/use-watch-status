@@ -15,6 +15,6 @@ export function statusReducer<TStatus extends string | undefined>(statusState: T
     }
 }
 
-export function generateUpdateAction(status: string): Action<string | undefined> {
+export function generateUpdateAction(status?: string): Action<string | undefined> {
     return { type: UPDATE_ACTION, data: status };
 }
