@@ -24,6 +24,7 @@ npm install --save use-watch-status
 import React from 'react'
 import { useWatchStatus } from 'use-watch-status'
 
+// NOTE: Without 'as const' on this array all the typescript typings will break
 const ALL_POTENTIAL_STATUS_STATES = ['ready', 'loading', 'complete'] as const;
 
 const Example = () => {
@@ -35,10 +36,10 @@ const Example = () => {
 
     // simulate loading
     setTimeout(() => {
-      triggers.onLoading()
+      triggers.onLoading();
 
       // simulate loading for 5 seconds, before being marked as complete
-      setTimeout(() => triggers.onComplete(), 5 * 1000)
+      setTimeout(() => triggers.onComplete(), 5 * 1000);
     }, 2 * 1000);
   }, []);
 
@@ -51,6 +52,38 @@ const Example = () => {
   )
 }
 ```
+
+## Useful Recipe
+
+Create a wrapper around the hook for re-use
+
+```tsx
+
+const NETWORK_FETCH_STATUS_STATES = ['ready', 'loading', 'error', 'finished', 'timeout'];
+
+const useWatchFetchStatus = () => useWatchStatus(NETWORK_FETCH_STATUS_STATES);
+
+// - Usage - 
+
+const App = () => {
+  const [fetchStatusChecks, fetchStatusTriggers] = useWatchFetchStatus();
+
+  useEffect(() => {
+    if (isNetworkAccessable) {     // <--- pretend check before triggering 'ready' status
+      fetchStatusTriggers.onReady();
+    }
+  }, []);
+
+  if (fetchStatusChecks.isReady) {
+    // Do something
+  }
+}
+
+```
+
+## Community
+
+Please don't be shy, if you think there are improvements to be made, then submit an issue.
 
 ## License
 
